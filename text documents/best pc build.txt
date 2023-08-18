@@ -1,0 +1,7 @@
+RTX 4090
+CPU AMD Ryzen Threadripper Pro 5995WX
+Windows 10 enterprise
+6TB RAM
+X11DPT-BH motherboard
+Noctua NF-S12B redux-1200 fan
+ExaDrive EDDCT100 100TB storage

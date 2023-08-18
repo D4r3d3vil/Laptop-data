@@ -1,0 +1,426 @@
+{% extends "mail/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container">
+    <div class="mail-box">
+        <aside class="sm-side">
+            <div class="user-head">
+                <div class="user-name">
+                    <h4>{{ request.user.email }}</h4>
+                </div>
+            </div>
+            <div class="inbox-body">
+                <button class="btn btn-compose" id="compose">
+                    Compose
+                </button>
+            </div>
+            <ul class="inbox-nav inbox-divider">
+                <li id="inbox">
+                    <a href="#"><i class="fa fa-inbox"></i> Inbox <span class="notificationCount"></span></a>
+                </li>
+                <li id="sent">
+                    <a href="#"><i class="fa fa-envelope"></i> Sent</a>
+                </li>
+                <li id="archived">
+                    <a href="#"><i class="fa fa-bookmark"></i> Archived</a>
+                </li>
+            </ul>
+
+        </aside>
+        <aside class="lg-side" id="msgBox">
+            <div class="inbox-head">
+                <h3 id="mail-box">Inbox</h3>
+                <form action="#" class="pull-right position">
+                    <div class="input-append">
+                        <input type="text" name="q" class="sr-input" placeholder="Search Mail">
+                        <button class="btn sr-btn" type="button"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+            <div id="viewEmail">
+                <div id="back">
+
+                </div>
+                <div id="subject">
+
+                </div>
+                <div id="timestamp">
+
+                </div>
+                <a id="sender">
+
+                </a>
+                <div id="body">
+
+                </div>
+                <div id="footer">
+                    <button id="reply">Reply</button>
+                </div>
+            </div>
+            <table class="table table-inbox table-hover">
+            </table>
+    </div>
+    </aside>
+    <div id="compose-view">
+        <a href="/">Back</a>
+        <h3>New Email</h3>
+        <form id="compose-form" onsubmit="compose_email()">
+            <div class="form-group">
+                From: <input disabled class="form-control" value="{{ request.user.email }}">
+            </div>
+            <div class="form-group">
+                To: <input placeholder="E-mail" id="compose-recipients" class="form-control">
+            </div>
+            <div class="form-group">
+                <input class="form-control" id="compose-subject" placeholder="Subject">
+            </div>
+            <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
+            <input type="submit" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
+</div>
+<style>
+    .container {
+        width: 100%;
+        height: 100vh
+    }
+
+    .mail-box {
+        border-collapse: collapse;
+        border-spacing: 0;
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+        height: 100vh
+    }
+
+    .mail-box aside {
+        display: inline-block;
+        height: 100vh;
+        vertical-align: top
+    }
+
+    .mail-box .sm-side {
+        background: none repeat scroll 0 0 #e5e8ef;
+        border-radius: 4px 0 0 4px;
+        width: 25%
+    }
+
+    .mail-box .lg-side {
+        height: 100vh;
+        overflow: scroll;
+        background: none repeat scroll 0 0 #fff;
+        border-radius: 0 4px 4px 0;
+        width: 75%
+    }
+
+    .mail-box .lg-side {
+        -ms-overflow-style: none;
+        scrollbar-width: none
+    }
+
+    .mail-box .lg-side::-webkit-scrollbar {
+        display: none
+    }
+
+    .mail-box .sm-side .user-head {
+        background: none repeat scroll 0 0 #00a8b3;
+        border-radius: 4px 0 0;
+        color: #fff;
+        min-height: 80px;
+        padding: 10px
+    }
+
+    .user-head .user-name {
+        display: inline-block;
+        margin: 0 0 0 10px
+    }
+
+    .user-head .user-name {
+        font-size: 14px;
+        word-break: break-word;
+        font-weight: 300;
+        margin-bottom: 0;
+        margin-top: 15px
+    }
+
+    .user-head .user-name a {
+        color: #fff
+    }
+
+    .user-head .user-name span a {
+        color: #87e2e7;
+        font-size: 12px
+    }
+
+    .inbox-body {
+        padding: 20px
+    }
+
+    .btn-compose {
+        background: none repeat scroll 0 0 #ff6c60;
+        color: #fff;
+        padding: 12px 0;
+        text-align: center;
+        width: 100%
+    }
+
+    .btn-compose:hover {
+        background: none repeat scroll 0 0 #f5675c;
+        color: #fff
+    }
+
+    ul.inbox-nav {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        width: 100%
+    }
+
+    .inbox-divider {
+        border-bottom: 1px solid #d5d8df
+    }
+
+    ul.inbox-nav li {
+        display: inline-block;
+        line-height: 45px;
+        width: 100%
+    }
+
+    ul.inbox-nav li a {
+        color: #6a6a6a;
+        display: inline-block;
+        line-height: 45px;
+        padding: 0 20px;
+        width: 100%
+    }
+
+    ul.inbox-nav li a:focus,
+    ul.inbox-nav li a:hover {
+        background: none repeat scroll 0 0 #d5d7de;
+        color: #6a6a6a
+    }
+
+    ul.inbox-nav li a i {
+        color: #6a6a6a;
+        font-size: 16px;
+        padding-right: 10px
+    }
+
+    .inbox-head {
+        background: none repeat scroll 0 0 #41cac0;
+        border-radius: 0 4px 0 0;
+        color: #fff;
+        min-height: 80px;
+        padding: 20px
+    }
+
+    .inbox-head h3 {
+        display: inline-block;
+        font-weight: 300;
+        margin: 0;
+        padding-top: 6px
+    }
+
+    .inbox-head .sr-input {
+        border: medium none;
+        border-radius: 4px 0 0 4px;
+        box-shadow: none;
+        color: #8a8a8a;
+        float: left;
+        height: 40px;
+        padding: 0 10px
+    }
+
+    .inbox-head .sr-btn {
+        background: none repeat scroll 0 0 #00a6b2;
+        border: medium none;
+        border-radius: 0 4px 4px 0;
+        color: #fff;
+        height: 40px;
+        padding: 0 20px
+    }
+
+    .table-inbox {
+        border: 1px solid #d3d3d3;
+        margin-bottom: 0
+    }
+
+    .view-mail a {
+        color: #ff6c60
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0
+    }
+
+    .notificationCount {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-collapse: collapse;
+        border-spacing: 0;
+        list-style-type: none;
+        box-sizing: border-box;
+        display: inline;
+        padding: .2em .6em .3em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25em;
+        background-color: #d9534f;
+        float: right !important;
+        margin-top: 13px
+    }
+
+    #sender,
+    #subject {
+        display: inline-block
+    }
+
+    #sender {
+        margin-right: 20px
+    }
+
+    .email {
+        border: solid 1px #000
+    }
+
+    #viewEmail {
+        border-radius: 5px;
+        border: solid 1px #000;
+        height: 83%;
+        width: 100%
+    }
+    .td{
+        border-right: solid 0.5px black;
+    }
+    a{
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+{% block script %}
+<script >document.addEventListener('DOMContentLoaded', function () {
+    document.querySelector('#compose-view').style.display = 'none'
+    // Use buttons to toggle between views
+    document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
+    document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
+    document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
+    document.querySelector('#compose').addEventListener('click', function () {
+        document.querySelector('.mail-box').style.display = 'none';
+        document.querySelector('#viewEmail').style.display = 'none';
+        document.querySelector('#mailBody').style.display = 'none'
+        document.querySelector('#compose-view').style.display = 'block';
+    });
+    document.getElementById('reply').addEventListener('click', function () {
+        document.querySelector('#compose-view').style.display = 'block'
+        document.querySelector('#viewEmail').style.display = 'none'
+        document.querySelector('.mail-box').style.display = 'none'
+        document.querySelector('#compose-recipients').value = document.querySelector('#sender').innerText
+        document.querySelector('#compose-subject').value = `${!document.querySelector('#subject').innerText.startsWith('Re: ') ? `Re: ${document.querySelector('#subject').innerText}` : ''}`
+        document.querySelector('#compose-body').innerText = `On ${document.querySelector('#timestamp').innerText} ${document.querySelector('#sender').innerText} Wrote: "${document.querySelector('#body').innerText}"`
+    })
+
+    // By default, load the inbox
+    load_mailbox('inbox');
+});
+
+async function compose_email() {
+
+    const sent = await fetch(`/emails`, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "recipients": document.querySelector('#compose-recipients').value, "subject": document.querySelector('#compose-subject').value, "body": document.querySelector('#compose-body').value })
+    })
+    // Clear out composition fields
+    document.querySelector('#compose-recipients').value = '';
+    document.querySelector('#compose-subject').value = '';
+    document.querySelector('#compose-body').value = '';
+}
+
+async function load_mailbox(mailbox) {
+    let params = new URLSearchParams(document.location.search)
+    let search = params.get("q")
+    document.querySelector('.sr-input').value = ''
+    if (search) document.querySelector('.sr-input').value = params.get('q')
+    let unread = 0;
+    let mail = await (await fetch(`/emails/${mailbox}`)).json()
+    mail.forEach(email => {
+        if (!email.read) unread++
+    })
+    if (mailbox == 'inbox') { if (unread > 0) document.querySelector('.notificationCount').innerText = unread }
+    document.querySelector('.table-inbox').innerHTML = `${mailbox!='sent'?'<td class="td">Archive</td>':''}<td class="td">Sender</td><td class="td">Subject</td><td class="td">When</td><td class="td">Status</td><tbody id="mailBody"></tbody>`
+    document.querySelector('#viewEmail').style.display = 'none'
+    document.querySelector('#mail-box').style.display = 'block';
+    document.getElementById('compose-view').style.display = 'none';
+    document.querySelector('#mailBody').innerHTML = '';
+    document.querySelector('#mail-box').innerHTML = 'Loading...';
+    document.querySelector('#mail-box').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}:</h3>`;
+    document.getElementById('back').innerHTML = `<a href=${`/?p=${mailbox}`}>Back</a>`
+    mail.forEach(email => {
+        if (search && email.sender.toLowerCase() != search.toLowerCase() && email.subject.toLowerCase() != search.toLowerCase() && !email.sender.toLowerCase().includes(search.toLowerCase()) && !email.subject.toLowerCase().includes(search.toLowerCase())) return
+        document.querySelector('#mailBody').innerHTML += `<tr class='mailbox'>
+        ${mailbox != 'sent' ? `<td style='${email.read ? "background-color:#ebebeb" : "background-color:white"}' class="inbox-small-cells" ><i class="fa fa-archive" onclick=${!email.archived ? `archive(${email.id})` : `unarchive(${email.id})`} style='${email.archived ? "color: #f78a09" : "color: #d3d3d3"}'></i></td>` : ""}
+        <td class="view-message onclick="openEmail('${email.read}', '${email.sender}', '${email.subject}', '${email.body}', '${email.id}', '${email.timestamp}')" onclick="openEmail('${email.read}', '${email.sender}', '${email.subject}', '${email.body}', '${email.id}', '${email.timestamp}')" style='${email.read ? "background-color:#ebebeb" : "background-color:white"}'  dont-show" onclick="openEmail('${email.read}', '${email.sender}', '${email.subject}', '${email.body}', '${email.id}', '${email.timestamp}')" style='${email.read ? "background-color:#ebebeb" : "background-color:white"}'>${email.sender} ${mailbox=='sent'?'(you)':''}</td>
+        <td onclick="openEmail('${email.read}', '${email.sender}', '${email.subject}', '${email.body}', '${email.id}', '${email.timestamp}')" style='${email.read ? "background-color:#ebebeb" : "background-color:white"}' class="view-message onclick="openEmail('${email.read}', '${email.sender}', '${email.subject}', '${email.body}', '${email.id}', '${email.timestamp}')" style='${email.read ? "background-color:#ebebeb" : "background-color:white"}' ">${email.subject}</td>
+        <td class="view-message onclick="openEmail('${email.read}', '${email.sender}', '${email.subject}', '${email.body}', '${email.id}', '${email.timestamp}')" style='${email.read ? "background-color:#ebebeb" : "background-color:white"}' text-right" onclick="openEmail('${email.read}', '${email.sender}', '${email.subject}', '${email.body}', '${email.id}', '${email.timestamp}')" style='${email.read ? "background-color:#ebebeb" : "background-color:white"}'>${formatTimestamp(email.timestamp)}</td>
+        ${!email.read ? `<td><p class="notificationCount" style='display:inline-block;margin:0;'>new</p></td>` : `<td  onclick="openEmail('${email.read}', '${email.sender}', '${email.subject}', '${email.body}', '${email.id}, ${email.timestamp}')" style='${email.read ? "background-color:#ebebeb" : "background-color:white"}'>${email.archived?'Archived':'Read'} </td>`}
+        </tr>`
+    });
+    params.delete('q')
+    params.set('p', mailbox)
+    window.history.replaceState(null, null, '?' + params.toString());
+}
+async function openEmail(read, sender, subject, body, id, timestamp) {
+    if (read == 'false') {
+        await fetch(`/emails/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({ read: true })
+        })
+    }
+    document.querySelector('#mailBody').style.display = 'none'
+    document.querySelector('#compose-view').style.display = 'none'
+    document.querySelector('#viewEmail').style.display = ''
+    document.querySelector('#subject').innerHTML = `<h3>${subject}</h3>`
+    document.querySelector('#timestamp').innerText = `${formatTimestamp(timestamp)}`
+    document.querySelector('#sender').innerText = sender
+    document.querySelector("#body").innerText = body
+}
+function formatTimestamp(date) {
+    date = new Date(date)
+    let now = new Date();
+    let dd = date.getDate();
+    let mm = date.getMonth() + 1;
+    if (date.getFullYear() === now.getFullYear()) {
+        return `${dd}/${mm}`;
+    }
+    let yy = date.getFullYear() % 100;
+    return `${dd}/${mm}/${yy}`;
+}
+async function archive(id) {
+    await fetch(`/emails/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ archived: true })
+    })
+    load_mailbox('inbox')
+}
+async function unarchive(id) {
+    await fetch(`/emails/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ archived: false })
+    })
+    load_mailbox('inbox')
+}</script>
+{% endblock %}

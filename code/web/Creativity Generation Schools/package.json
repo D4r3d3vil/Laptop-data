@@ -1,0 +1,36 @@
+{
+	"name": "creativity-generation-schools",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/kit": "^1.5.0",
+		"svelte": "^3.54.0",
+		"vite": "^4.3.0"
+	},
+	"type": "module",
+	"dependencies": {
+		"@codemirror/lang-css": "^6.2.0",
+		"@codemirror/lang-html": "^6.4.4",
+		"@codemirror/lang-javascript": "^6.1.9",
+		"@codemirror/lint": "^6.2.2",
+		"codemirror": "^6.0.1",
+		"codemirror-svelte": "^2.0.0",
+		"csslint": "^1.0.5",
+		"eslint-linter-browserify": "^8.43.0",
+		"firebase": "^9.22.1",
+		"hash-wasm": "^4.9.0",
+		"highlight.js": "^11.8.0",
+		"highlightjs": "^9.16.2",
+		"html-tag-check": "^0.1.8",
+		"htmlhint": "^1.1.4",
+		"jshint": "^2.13.6",
+		"monaco-editor": "^0.39.0",
+		"svelte-codemirror-editor": "^1.1.0"
+	}
+}
